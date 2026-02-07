@@ -5,6 +5,7 @@ resource "aws_eks_access_entry" "admins" {
   cluster_name  = var.cluster_name
   principal_arn = each.value
   type          = "STANDARD"
+  depends_on = [module.eks.cluster_id]
 }
 
 resource "aws_eks_access_policy_association" "admin_access" {
