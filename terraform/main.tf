@@ -63,13 +63,15 @@ module "eks" {
       max_size     = 1
       desired_size = 1
 
-      instance_types = ["t3.micro"]
+      instance_types = ["t3.small"]
       capacity_type  = "ON_DEMAND"
       instance_market_options = {}
       labels = { role = "demo" }
+      iam_role_additional_policies = {
+      ECRReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+      }
     }
   }
-
   tags = {
     Environment = "gitops-demo"
   }
