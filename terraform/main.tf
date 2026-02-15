@@ -20,6 +20,24 @@ provider "aws" {
   region = var.region
 }
 
+provider "kubernetes" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
+}
+
+data "aws_eks_cluster_auth" "cluster" {
+  name = module.eks.cluster_name
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = module.eks.cluster_endpoint
+    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+    token                  = data.aws_eks_cluster_auth.cluster.token
+  }
+}
+
 data "aws_availability_zones" "available" {}
 
 module "vpc" {
@@ -59,11 +77,11 @@ module "eks" {
 
   eks_managed_node_groups = {
     default = {
-      min_size     = 1
-      max_size     = 1
-      desired_size = 1
+      min_size     = 2
+      max_size     = 3
+      desired_size = 2
 
-      instance_types = ["t3.small"]
+      instance_types = ["t3.large"]
       capacity_type  = "ON_DEMAND"
       instance_market_options = {}
       labels = { role = "demo" }

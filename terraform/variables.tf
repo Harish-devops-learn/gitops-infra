@@ -23,3 +23,9 @@ variable "developer_users" {
   type = list(string)
   default = []
 }
+
+variable "argocd_password_plain" {
+  description = "ArgoCD admin password"
+  type        = string
+  sensitive   = true
+}
